@@ -2,6 +2,7 @@ from dronekit import connect, VehicleMode, LocationGlobalRelative
 from Constants import connectionString, baudRate, speed, lAcc, AiSpeed, landingSpeed, altitude, conf, weight
 from Drone.Drone import arm_and_takeoff, get_location_metres
 from Camera.Camera import capture_image
+from picamera2 import Picamera2
 import uuid
 import time
 import os
@@ -12,30 +13,32 @@ try:
     vehicle = connect(connectionString, wait_ready=True, baud=baudRate)
     print("Vehicle Connected successfully...")
 
-    destlat = float(input())
-    destlong = float(input())
+    destlat, destlong = map(float, input().split(","))
+    print("Destination coordinates: ", destlat, destlong)
     #destlat, destlong = 12.971730433350809,80.04374350577795
 
     # Taking off
     arm_and_takeoff(vehicle, altitude)
 
     # Changing to Guided mode
-    if vehicle.mode.name != "GUIDED":
-        vehicle.mode = VehicleMode("GUIDED")
-        print("Vehicle mode changed...")
-
+    #if vehicle.mode.name != "GUIDED":
+    vehicle.mode = VehicleMode("GUIDED")
+    print("Vehicle mode changed...")
     # Going to Destination
     dest_location = LocationGlobalRelative(destlat, destlong, altitude)
     vehicle.simple_goto(dest_location, groundspeed=speed)
     time.sleep(60)
-
-    while True:
+    
+    camera = Picamera2()
+    start_time = time.time()
+    while time.time() - start_time < 100:
+        print("before capture image ")
         # Capturing Image in Raspberry Pi
-        # capture_image("image.jpg")
-
+        capture_image("image.jpg", camera)
+        print("After capture image")
         # Running Yolo
-        # decision = run(weights=weight, source="image.jpg", conf_thres=conf)
-        decision = (0, 101.5, 0, 86.25, 'Quadrant 3')
+        decision = run(weights=weight, source="image.jpg", conf_thres=conf)
+        #decision = (0, 101.5, 0, 86.25, 'Quadrant 3')
 
         # Moving to helipad
         print("Taken by AI....")
@@ -58,14 +61,14 @@ try:
 
     # Landing
     print("Landing...")
-    vehicle.mode = VehicleMode("LAND", airspeed=landingSpeed)
+    vehicle.mode = VehicleMode("LAND")
     time.sleep(5)
 
     # Triggering actions like dropping..
 
     # Return to Launching pad
     print("Return to launch...")
-    vehicle.mode = VehicleMode("RTL", groundspeed=speed, airspeed=landingSpeed)
+    vehicle.mode = VehicleMode("RTL")
     time.sleep(4)
 
     print("Landed safely...")
@@ -78,4 +81,3 @@ finally:
         vehicle.close()
     except NameError:
         pass  # Handle the case where vehicle was never initialized
-

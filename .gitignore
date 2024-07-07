@@ -1,2 +1,5 @@
 ./detected/*
 ./asunama/*
+__pycache__/
+venv/
+mav.*

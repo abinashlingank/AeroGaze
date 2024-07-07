@@ -1,6 +1,6 @@
 # Drone General
 acc = 0.95 # Accuracy Confidence for Drone movement
-connectionString = '127.0.0.1:14550'  # Connection String
+connectionString = '192.168.0.124:14550'  # Connection String
 baudRate = 57600 # BaudRate
 speed = 5 # Mission Speed in m/s
 altitude = 15 # Mission Altitude in meters
