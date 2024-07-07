@@ -10,7 +10,7 @@ landingSpeed = 2 # Landing Speed in m/s for soft landing
 lAcc = 0.05 # Landing acuuracy in meters
 AiSpeed = 2 # AI alignment speed in m/s
 conf = 0.9 # AI detection accuracy
-weight = "best.pt" # weights of the model
+weight = "Rasyolo/best.pt" # weights of the model
 
 # Camera
 focalLength = 12.5 # focal Length of the camera in mm
