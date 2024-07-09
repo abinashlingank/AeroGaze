@@ -3,7 +3,6 @@ from Constants import connectionString, baudRate, speed, lAcc, AiSpeed, landingS
 from Drone.Drone import arm_and_takeoff, get_location_metres
 from Camera.Camera import capture_image
 from picamera2 import Picamera2
-import uuid
 import time
 import os
 from Rasyolo.detect1 import run

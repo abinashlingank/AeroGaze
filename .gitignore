@@ -3,3 +3,6 @@
 __pycache__/
 venv/
 mav.*
+Rasyolo/__pycache__
+Rasyolo/models/__pycache__
+Rasyolo/__pycache__
