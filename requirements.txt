@@ -2,7 +2,7 @@ dronekit==2.9.2
 future==0.18.3
 lxml==5.1.0
 monotonic==1.6
-pymavlink==2.4.41
+pymavlink==2.4.8
 picamera==1.13
 # YOLOv5 requirements
 # Usage: pip install -r requirements.txt

@@ -1,25 +1,23 @@
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 from Constants import connectionString, baudRate, speed, lAcc, AiSpeed, landingSpeed, altitude, conf, weight
 from Drone.Drone import arm_and_takeoff, get_location_metres
-from Camera.Camera import capture_image
-from picamera2 import Picamera2
+import requests
+import uuid
 import time
 import os
-from Rasyolo.detect1 import run
-from ultralytics import YOLO
+from Rasyolo.detect import run
 
 
-#load the model
-model = YOLO(weight)
+time.sleep(10)
 
 try:
     # Making Connection
     vehicle = connect(connectionString, wait_ready=True, baud=baudRate)
     print("Vehicle Connected successfully...")
 
-    destlat, destlong = map(float, input().split(","))
+    #destlat, destlong = map(float, input().split(","))
+    destlat, destlong = 12.97169,80.04383
     print("Destination coordinates: ", destlat, destlong)
-    #destlat, destlong = 12.971730433350809,80.04374350577795
 
     print('Change vehicle mode')
     vehicle.mode = VehicleMode('GUIDED')
@@ -30,7 +28,7 @@ try:
     arm_and_takeoff(vehicle, altitude)
 
     # Changing to Guided mode
-    #if vehicle.mode.name != "GUIDED":
+    # if vehicle.mode.name != "GUIDED":
     vehicle.mode = VehicleMode("GUIDED")
 
     # Going to Destination
@@ -38,16 +36,18 @@ try:
     vehicle.simple_goto(dest_location, groundspeed=speed)
     time.sleep(60)
     
-    camera = Picamera2()
     start_time = time.time()
     while time.time() - start_time < 100:
         print("before capture image ")
-        # Capturing Image in Raspberry Pi
-        capture_image("image.jpg", camera)
+        response = requests.get('http://127.0.0.1:8000/camera')
+        print(response.text)
         print("After capture image")
+
         # Running Yolo
-        decision = run(weight, 'image.jpg', True, conf_thres=0.8)
-        if not any(decision):
+        decision = run(weights=weight, source='image.jpg', conf_thres=0.9)
+        os.rename('image.jpg', f'temp/{str(uuid.uuid1())}.png')
+
+        if not decision:
             print('helipad not detected')
             continue
 
@@ -79,9 +79,9 @@ try:
     # Triggering actions like dropping..
 
     # Return to Launching pad
-    print("Return to launch...")
-    vehicle.mode = VehicleMode("RTL")
-    time.sleep(4)
+    #print("Return to launch...")
+    #vehicle.mode = VehicleMode("RTL")
+    #time.sleep(4)
 
     print("Landed safely...")
 

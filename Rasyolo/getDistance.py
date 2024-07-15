@@ -1,6 +1,10 @@
+from Constants import frame_dim, flightHeight, focalLength, sensorDim, imgDim
+def getGSD():
+    GSDh =  (flightHeight * sensorDim[0]) / (focalLength * imgDim[0])
+    GSDw =  (flightHeight * sensorDim[1]) / (focalLength * imgDim[1])
+    return GSDh, GSDw
 
-
-def GetDistance(box, frame_dim, gsd):
+def GetDistance(box, frame_dim=frame_dim, gsd=getGSD()):
     middle_frame = (frame_dim[0]//2, frame_dim[1]//2)
     middle_box = box
 
@@ -36,4 +40,4 @@ def GetDistance(box, frame_dim, gsd):
         quad = 'Quadrant 4'
         return 0, disty, distx, 0, quad
 
-    # return quad, dis_lst, distx, disty
+    return quad, dis_lst, distx, disty

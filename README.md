@@ -25,8 +25,21 @@ pip install -r requirements.txt
 
 ### Example MavProxy command to connect to the drone:
 ```bash
-    mavproxy.py --master tcp:<IP_Address>:5760 --out <IP_Address>:14550 --out <IP_Address>:14551
+mavproxy.py --master tcp:<IP_Address>:5760 --out <IP_Address>:14550 --out <IP_Address>:14551
 ```
 
 > [!NOTE]
 > Instead of running the mavproxy command, edit the 'run' file in the root folder and replace the IP address with the IP address of the drone.
+
+
+---
+
+- Need to give permission in Raspberry pi to access the serial port
+```bash
+sudo usermod -a -G dialout $USER
+```
+
+### Params
+
+**PILOT_THR_BHV = 4**
+This parameter enables to arm the drone with the program

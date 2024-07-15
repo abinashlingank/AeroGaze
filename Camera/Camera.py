@@ -3,7 +3,7 @@ from time import sleep
 from picamera2 import Picamera2
 import sys
 sys.path.append("..")
-from Constants import focalLength, sensorDim, imgDim
+from Constants import flightHeight, focalLength, sensorDim, imgDim
 from Constants import flightHeight
 
 def capture_image(file_path, camera):
