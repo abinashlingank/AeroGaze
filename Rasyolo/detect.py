@@ -69,6 +69,7 @@ from utils.torch_utils import select_device, smart_inference_mode
 
 @smart_inference_mode()
 def run(
+    height,
     weights=ROOT / "yolov5s.pt",  # model path or triton URL
     source=ROOT / "data/images",  # file/dir/URL/glob/screen/0(webcam)
     data=ROOT / "data/coco128.yaml",  # dataset.yaml path
@@ -101,7 +102,6 @@ def run(
     decision=0
     source = str(source)
     save_img = not nosave and not source.endswith(".txt")  # save inference images
-    print(save_img)
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(("rtsp://", "rtmp://", "http://", "https://"))
     webcam = source.isnumeric() or source.endswith(".streams") or (is_url and not is_file)
@@ -110,9 +110,9 @@ def run(
         source = check_file(source)  # download
 
     # Directories
-    save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+    # save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
     save_dir = Path()/"detected"
-    (save_dir / "labels" if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    # (save_dir / "labels" if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Load model
     device = select_device(device)
@@ -268,7 +268,7 @@ def run(
             middle_box = (float(box[0]+(box[2]-box[0])/2) ,float(box[1]+(box[3]-box[1])/2))
             # print(middle_box)
             # print(GetDistance(middle_box, (1920, 1080), 0.5))
-            decision = GetDistance(middle_box, (1920, 1080), (0.61, 0.47))
+            decision = GetDistance(middle_box, height)
 
     # Print results
     t = tuple(x.t / seen * 1e3 for x in dt)  # speeds per image

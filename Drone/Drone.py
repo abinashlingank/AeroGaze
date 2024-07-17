@@ -13,7 +13,26 @@ class DroneDirection(Enum):
     BACKWARD = 2
     LEFT = 3
     RIGHT = 4
+    UP = 5
+    DOWN = 6
 
+def condition_yaw(vehicle, heading, relative=False):
+    """
+    Send MAV_CMD_CONDITION_YAW message to point the vehicle to a specified heading.
+    """
+    is_relative = 1 if relative else 0
+    msg = vehicle.message_factory.command_long_encode(
+        0, 0,    # target_system, target_component
+        mavutil.mavlink.MAV_CMD_CONDITION_YAW, # command
+        0,       # confirmation
+        heading, # param 1: target angle, in degrees
+        0,       # param 2: speed (degrees per second)
+        1,       # param 3: direction -1 ccw, 1 cw
+        is_relative, # param 4: relative offset 1, absolute angle 0
+        0, 0, 0)    # param 5 ~ 7 not used
+    vehicle.send_mavlink(msg)
+    vehicle.flush()
+    
 def send_ned_velocity(vehicle, vx, vy, vz, duration):
     """
     Move vehicle in direction based on specified velocity vectors.
@@ -43,14 +62,18 @@ def lock_yaw_move(vehicle, direction, speed, distance):
     distance -- distance to move in meters
     """
     duration = distance / speed
-    if direction == DroneDirection.FORWARDS:
+    if direction == DroneDirection.FORWARD:
         send_ned_velocity(vehicle, speed, 0, 0, duration)
-    elif direction == DroneDirection.BACKWARDS:
+    elif direction == DroneDirection.BACKWARD:
         send_ned_velocity(vehicle, -speed, 0, 0, duration)
     elif direction == DroneDirection.LEFT:
         send_ned_velocity(vehicle, 0, -speed, 0, duration)
     elif direction == DroneDirection.RIGHT:
         send_ned_velocity(vehicle, 0, speed, 0, duration)
+    elif direction == DroneDirection.DOWN:
+        send_ned_velocity(vehicle, 0,0,speed, duration)
+    elif direction == DroneDirection.UP:
+        send_ned_velocity(vehicle, 0,0,-speed, duration)
     else:
         print("Invalid direction. Choose 'forwards', 'backwards', 'left', or 'right'.")
 
