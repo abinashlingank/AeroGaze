@@ -16,8 +16,8 @@ weight = "Rasyolo/best.pt" # weights of the model
 
 # Camera
 focalLength =  3.6 # focal Length of the camera in mm
-sensorDim = [25.0, 24.0] # sensor dimension (height, width)
-imgDim = (1080, 1920) # Image dimension (height, width)
+sensorDim = [24.0, 25.0] # sensor dimension (width, height)
+imgDim = (1920, 1080) # Image dimension (width, height)
 
 # Conversions
 focalLength /= 10
@@ -26,4 +26,4 @@ sensorDim[1] /= 10
 height = altitude*100
 
 #Frame Dimensions of Image while getting distance
-frame_dim = (1080, 1920)
+frame_dim = (1920, 1080) # Frame Dimension (width, height)
