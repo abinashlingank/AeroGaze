@@ -1,7 +1,7 @@
 from Constants import frame_dim, height, focalLength, sensorDim, imgDim
 def getGSD(height):
-    GSDh =  (height * sensorDim[0]) / (focalLength * imgDim[0])
-    GSDw =  (height * sensorDim[1]) / (focalLength * imgDim[1])
+    GSDh =  (height * sensorDim[1]) / (focalLength * imgDim[1])
+    GSDw =  (height * sensorDim[0]) / (focalLength * imgDim[0])
     return GSDw, GSDh
 
 def GetDistance(box,height, frame_dim=frame_dim):
@@ -11,8 +11,8 @@ def GetDistance(box,height, frame_dim=frame_dim):
     distx = abs(middle_frame[0]-middle_box[0])
     disty = abs(middle_box[1]-middle_frame[1])
     print(distx, disty)
-    distx = distx*gsd[1]
-    disty = disty*gsd[0]
+    distx = distx*gsd[0]
+    disty = disty*gsd[1]
 
     ph_end_x , ph_end_y = frame_dim[0], frame_dim[1]
     quad_1_dis = (((middle_box[0]-ph_end_x)**2)+((middle_box[1])**2))**(0.5)
