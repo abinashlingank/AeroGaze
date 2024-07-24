@@ -69,8 +69,9 @@ from utils.torch_utils import select_device, smart_inference_mode
 
 @smart_inference_mode()
 def run(
+    model,
     height,
-    weights=ROOT / "yolov5s.pt",  # model path or triton URL
+    #weights=ROOT / "yolov5s.pt",  # model path or triton URL
     source=ROOT / "data/images",  # file/dir/URL/glob/screen/0(webcam)
     data=ROOT / "data/coco128.yaml",  # dataset.yaml path
     imgsz=(640, 640),  # inference size (height, width)
@@ -116,7 +117,7 @@ def run(
 
     # Load model
     device = select_device(device)
-    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
+    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=False)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
 
@@ -266,6 +267,9 @@ def run(
         for i in range(0, len(up_coor_lst)):
             box = up_coor_lst[i]
             middle_box = (float(box[0]+(box[2]-box[0])/2) ,float(box[1]+(box[3]-box[1])/2))
+            print("middle of the box",middle_box)
+            print("x distance", middle_box[0]-1920/2)
+            print("y distance", middle_box[1]-1080/2)
             # print(middle_box)
             # print(GetDistance(middle_box, (1920, 1080), 0.5))
             decision = GetDistance(middle_box, height)

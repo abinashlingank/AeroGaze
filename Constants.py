@@ -20,9 +20,9 @@ sensorDim = [24.0, 25.0] # sensor dimension (width, height)
 imgDim = (1920, 1080) # Image dimension (width, height)
 
 # Conversions
-focalLength /= 10
-sensorDim[0] /= 10
-sensorDim[1] /= 10
+focalLength /= 1000
+sensorDim[0] /= 1000
+sensorDim[1] /= 1000
 height = altitude*100
 
 #Frame Dimensions of Image while getting distance

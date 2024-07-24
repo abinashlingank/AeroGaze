@@ -43,3 +43,7 @@ sudo usermod -a -G dialout $USER
 
 **PILOT_THR_BHV = 4**
 This parameter enables to arm the drone with the program
+
+
+
+

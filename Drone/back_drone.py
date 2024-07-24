@@ -13,32 +13,7 @@ class DroneDirection(Enum):
     BACKWARD = 2
     LEFT = 3
     RIGHT = 4
-    UP = 5
-    DOWN = 6
 
-def condition_yaw(vehicle, heading, relative=False):
-    """
-    Send MAV_CMD_CONDITION_YAW message to point the vehicle to a specified heading.
-    """
-    is_relative = 1 if relative else 0
-    msg = vehicle.message_factory.command_long_encode(
-        0, 0,    # target_system, target_component
-        mavutil.mavlink.MAV_CMD_CONDITION_YAW, # command
-        0,       # confirmation
-        heading, # param 1: target angle, in degrees
-        25,       # param 2: speed (degrees per second)
-        1,       # param 3: direction -1 ccw, 1 cw
-        0, # param 4: relative offset 1, absolute angle 0
-        0, 0, 0)    # param 5 ~ 7 not used
-    vehicle.send_mavlink(msg)
-    vehicle.flush()
-
-def north_facing(vehicle):
-    """
-    Rotate the drone to face north.
-    """
-    condition_yaw(vehicle, 0, relative=False)
-    
 def send_ned_velocity(vehicle, vx, vy, vz, duration):
     """
     Move vehicle in direction based on specified velocity vectors.
@@ -76,10 +51,6 @@ def lock_yaw_move(vehicle, direction, speed, distance):
         send_ned_velocity(vehicle, 0, -speed, 0, duration)
     elif direction == DroneDirection.RIGHT:
         send_ned_velocity(vehicle, 0, speed, 0, duration)
-    elif direction == DroneDirection.DOWN:
-        send_ned_velocity(vehicle, 0,0,speed, duration)
-    elif direction == DroneDirection.UP:
-        send_ned_velocity(vehicle, 0,0,-speed, duration)
     else:
         print("Invalid direction. Choose 'forwards', 'backwards', 'left', or 'right'.")
 
@@ -128,7 +99,6 @@ def get_location_metres(original_location, distance, heading):
     # New position in decimal degrees
     newlat = original_location.lat + (dLat * 180/math.pi)
     newlon = original_location.lon + (dLon * 180/math.pi)
-    print(f"new lat{newlat} new lon{newlon}")
     if type(original_location) is LocationGlobal:
         targetlocation=LocationGlobal(newlat, newlon,original_location.alt)
     elif type(original_location) is LocationGlobalRelative:
